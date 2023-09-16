@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,6 +17,7 @@ import java.util.Map;
 
 public class VATCalculatorPage {
     private WebDriver driver;
+    private WebDriverWait wait;
     //Select element with countries
     @FindBy(name = "Country")
     private WebElement country;
@@ -41,6 +43,7 @@ public class VATCalculatorPage {
     public VATCalculatorPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(2));
     }
 
 
@@ -72,10 +75,6 @@ public class VATCalculatorPage {
         return getSelect().getOptions();
     }
 
-    public String baseOption() {
-        Select select = getSelect();
-        return select.getFirstSelectedOption().getText();
-    }
 
     //VAT rate selection methods
     private List<WebElement> getVATButtons() {
@@ -106,7 +105,8 @@ public class VATCalculatorPage {
         List<WebElement> radioButtons = getVATButtons();
         if (radioButtons.size() > 1) {
             WebElement firstButton = radioButtons.get(0);
-            ((JavascriptExecutor) driver).executeScript("arguments[0].checked = true;", firstButton);   //wanted to use firstButton.click(), but did not work on my device
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click()", firstButton);
+
             return firstButton.getAttribute("value");
         } else {
             return "Has only one element";
@@ -120,34 +120,32 @@ public class VATCalculatorPage {
     //Net-Gross-VAT radiobutton and input
     //select Net-Gross-VAT buttons
     public void selectNet() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].checked = true;", priceWithoutVAT); //wanted to use priceWithoutVAT.click(), but did not work on my device
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", priceWithoutVAT);
     }
 
     public void selectVAT() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].checked = true;", valueAddedTax); //wanted to use valueAddedTax.click(), but did not work on my device
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", valueAddedTax);
     }
 
     public void selectGross() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].checked = true;", priceInclVAT); //wanted to use priceInclVAT.click(), but did not work on my device
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", priceInclVAT);
+
     }
 
     //write value to Net-Gross-VAT inputs
     public void addNetInput(String inputValue) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", netPrice); //wanted to use netPrice.click(), but did not work on my device
-        netPrice.clear();
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + inputValue + "'", netPrice); //wanted to use vatSum.sendKeys but did not work on my device
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + inputValue + "'", netPrice);
+        wait.until(ExpectedConditions.stalenessOf(netPrice));
     }
 
     public void addVATInput(String inputValue) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", vatSum); //wanted to use vatSum.click(), but did not work on my device
-        vatSum.clear();
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + inputValue + "'", vatSum); //wanted to use vatSum.sendKeys but did not work on my device
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + inputValue + "'", vatSum);
+        wait.until(ExpectedConditions.stalenessOf(vatSum));
     }
 
     public void addGrossInput(String inputValue) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", price); //wanted to use price.click(), but did not work on my device
-        price.clear();
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + inputValue + "'", price); //wanted to use vatSum.sendKeys but did not work on my device
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + inputValue + "'", price);
+        wait.until(ExpectedConditions.stalenessOf(price));
     }
 
     //get Net-Gross-VAT input values

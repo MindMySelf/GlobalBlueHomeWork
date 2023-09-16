@@ -77,4 +77,30 @@ class VATCalculatorPageTest {
         page.closePage();
     }
 
+    //Input type selection and input field usability tests
+    @Test
+    public void canSelectNetRadioButtonOnlyNetInputFieldWritableTest() {
+        page.openPage();
+        page.selectFirstVAT();
+        page.selectNet();
+        page.addVATInput("123");
+        page.addGrossInput("123");
+        assertEquals("",page.getNetVATGrossValues().get("Net"));
+        assertEquals("NaN",page.getNetVATGrossValues().get("VAT"));
+        assertEquals("NaN",page.getNetVATGrossValues().get("Gross"));
+        page.closePage();
+        //Somehow can write into not selected parts without interruption, so this test fails
+        //
+    }
+    @Test
+    public void isValueCorrectWithNoDigitsWithInputInValidFieldTest() {
+        page.openPage();
+        page.selectFirstVAT();
+        page.selectNet();
+        page.addNetInput("100");
+        assertEquals("100",page.getNetVATGrossValues().get("Net"));
+        assertEquals("20.00",page.getNetVATGrossValues().get("VAT"));
+        assertEquals("120.00",page.getNetVATGrossValues().get("Gross"));
+        page.closePage();
+    }
 }
