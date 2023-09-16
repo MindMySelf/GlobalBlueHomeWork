@@ -27,7 +27,7 @@ public class VATCalculatorPage {
     @FindBy(id = "NetPrice")
     private WebElement netPrice;
     @FindBy(id = "VATsum")
-    private WebElement vatsum;
+    private WebElement vatSum;
     @FindBy(id = "Price")
     private WebElement price;
 
@@ -54,10 +54,13 @@ public class VATCalculatorPage {
     private Select getSelect() {
         return new Select(country);
     }
+    public WebElement getDefaultCountry() {
+        return getSelect().getFirstSelectedOption();
+    }
 
-    public String selectSpecificCountry() {
+    public String selectSpecificCountry(String country) {
         Select select = getSelect();
-        select.selectByValue("Hungary");
+        select.selectByVisibleText(country);
         return select.getFirstSelectedOption().getText();
     }
 
@@ -120,8 +123,8 @@ public class VATCalculatorPage {
         netPrice.sendKeys(value);
     }
     public void addVATInput(String value) {
-        vatsum.clear();
-        vatsum.sendKeys(value);
+        vatSum.clear();
+        vatSum.sendKeys(value);
     }
     public void addGrossInput(String value) {
         price.clear();
@@ -131,7 +134,7 @@ public class VATCalculatorPage {
     public Map<String, Double> getNetVATGrossValues() {
         Map<String, Double> values = new HashMap<String, Double>();
         values.put("Net", Double.parseDouble(netPrice.getAttribute("value")));
-        values.put("VAT", Double.parseDouble(vatsum.getAttribute("value")));
+        values.put("VAT", Double.parseDouble(vatSum.getAttribute("value")));
         values.put("Gross", Double.parseDouble(price.getAttribute("value")));
         return values;
     }
