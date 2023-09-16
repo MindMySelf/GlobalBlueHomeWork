@@ -3,6 +3,7 @@ package Page;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -44,6 +45,35 @@ class VATCalculatorPageTest {
         assertNotEquals(name,"Austria");
         name = page.selectSpecificCountry("Jamaica");
         assertNotEquals(name,"Oman");
+        page.closePage();
+    }
+    //VAT rate option tests
+    @Test
+    public void hasAnyVATOptionsTest() {
+        page.openPage();
+        assertTrue(page.hasAnyVAT());
+        page.closePage();
+    }
+    @Test
+    public void hasSelectedVATOptionTest() {
+        page.openPage();
+        page.selectSpecificCountry("Hungary");
+        assertEquals("27", page.getDefaultSelectedVATValue());
+        page.selectSpecificCountry("Oman");
+        assertEquals("5", page.getDefaultSelectedVATValue());
+        page.selectSpecificCountry("Greece");
+        assertEquals("24", page.getDefaultSelectedVATValue());
+        page.closePage();
+    }
+    @Test
+    public void canSelectAnotherVATRateIfPossibleTest() {
+        page.openPage();
+        page.selectSpecificCountry("Hungary");
+        assertEquals("5", page.selectFirstVAT());
+        page.selectSpecificCountry("Oman");
+        assertEquals("Has only one element", page.selectFirstVAT());
+        page.selectSpecificCountry("Greece");
+        assertEquals("6", page.selectFirstVAT());
         page.closePage();
     }
 
