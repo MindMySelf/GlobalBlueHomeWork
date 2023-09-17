@@ -40,6 +40,10 @@ public class VATCalculatorPage {
     @FindBy(xpath = "(//div[@class='row']//div[@class='col-sm-6 col-12 p-0 m-0'])[2]")
     private WebElement VATDiv;
 
+    //error message span
+    @FindBy(css = "span[background-color='rgb(192, 0, 0)'][color='white'] [padding='2px']")
+    private WebElement errorSpan;
+
     public VATCalculatorPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -93,6 +97,7 @@ public class VATCalculatorPage {
                     radioButton.getAttribute("checked") != null &&
                             radioButton.getAttribute("checked").equals("true")
             ) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click()", radioButton);
                 hasDefault = radioButton;
                 break;
             }
@@ -155,5 +160,9 @@ public class VATCalculatorPage {
         values.put("VAT", vatSum.getAttribute("value"));
         values.put("Gross", price.getAttribute("value"));
         return values;
+    }
+    //is error message displayed
+    public boolean isErrorDisplayed() {
+        return errorSpan.isDisplayed();
     }
 }
