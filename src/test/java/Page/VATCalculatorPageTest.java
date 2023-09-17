@@ -82,13 +82,8 @@ class VATCalculatorPageTest {
     public void canSelectNetRadioButtonOnlyNetInputFieldWritableTest() {
         page.openPage();
         page.selectFirstVAT();
-        page.selectVAT();
-        page.addNetInput("123");
-        page.addGrossInput("123");
-        assertEquals("",page.getNetVATGrossValues().get("Net"));
-        assertEquals("NaN",page.getNetVATGrossValues().get("VAT"));
-        assertEquals("NaN",page.getNetVATGrossValues().get("Gross"));
-        page.addNetInput("123");
+        page.selectNet();
+        page.addVATInput("123");
         assertEquals("",page.getNetVATGrossValues().get("Net"));
         assertEquals("NaN",page.getNetVATGrossValues().get("VAT"));
         assertEquals("NaN",page.getNetVATGrossValues().get("Gross"));
@@ -103,17 +98,12 @@ class VATCalculatorPageTest {
     public void canSelectVATRadioButtonOnlyVATInputFieldWritableTest() {
         page.openPage();
         page.selectFirstVAT();
-        page.selectNet();
-        page.addGrossInput("123");
+        page.selectVAT();
         page.addNetInput("123");
         assertEquals("NaN",page.getNetVATGrossValues().get("Net"));
         assertEquals("",page.getNetVATGrossValues().get("VAT"));
         assertEquals("NaN",page.getNetVATGrossValues().get("Gross"));
         page.addGrossInput("123");
-        assertEquals("NaN",page.getNetVATGrossValues().get("Net"));
-        assertEquals("",page.getNetVATGrossValues().get("VAT"));
-        assertEquals("NaN",page.getNetVATGrossValues().get("Gross"));
-        page.addNetInput("123");
         assertEquals("NaN",page.getNetVATGrossValues().get("Net"));
         assertEquals("",page.getNetVATGrossValues().get("VAT"));
         assertEquals("NaN",page.getNetVATGrossValues().get("Gross"));
@@ -123,12 +113,7 @@ class VATCalculatorPageTest {
     public void canSelectGrossRadioButtonOnlyGrossInputFieldWritableTest() {
         page.openPage();
         page.selectFirstVAT();
-        page.selectNet();
-        page.addVATInput("123");
-        page.addNetInput("123");
-        assertEquals("NaN",page.getNetVATGrossValues().get("Net"));
-        assertEquals("NaN",page.getNetVATGrossValues().get("VAT"));
-        assertEquals("",page.getNetVATGrossValues().get("Gross"));
+        page.selectGross();
         page.addVATInput("123");
         assertEquals("NaN",page.getNetVATGrossValues().get("Net"));
         assertEquals("NaN",page.getNetVATGrossValues().get("VAT"));
