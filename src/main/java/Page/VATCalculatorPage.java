@@ -67,8 +67,8 @@ public class VATCalculatorPage {
         return new Select(country);
     }
 
-    public WebElement getDefaultCountry() {
-        return getSelect().getFirstSelectedOption();
+    public String getDefaultCountry() {
+        return getSelect().getFirstSelectedOption().getText();
     }
 
     public String selectSpecificCountry(String country) {
@@ -77,8 +77,8 @@ public class VATCalculatorPage {
         return select.getFirstSelectedOption().getText();
     }
 
-    public List<WebElement> getAllOptions() {
-        return getSelect().getOptions();
+    public int getAllOptions() {
+        return getSelect().getOptions().size();
     }
 
 
@@ -120,9 +120,6 @@ public class VATCalculatorPage {
         }
     }
 
-    public Double getNumberValueOfSelected() {
-        return Double.parseDouble(selectFirstVAT());
-    }
 
     //Net-Gross-VAT radiobutton and input
     //select Net-Gross-VAT buttons

@@ -14,7 +14,7 @@ class VATCalculatorPageTest {
     @Test
     public void hasCountrySelectAnyOptionsTest() {
         page.openPage();
-        int numberOfOptions = page.getAllOptions().size();
+        int numberOfOptions = page.getAllOptions();
         page.closePage();
         assertTrue(numberOfOptions != 0);
     }
