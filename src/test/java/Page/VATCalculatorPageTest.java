@@ -8,6 +8,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 class VATCalculatorPageTest {
+    //write webdriver initialization or object creation into before each
     VATCalculatorPage page = new VATCalculatorPage(new ChromeDriver());
     //Country select tests
     @Test
@@ -191,10 +192,46 @@ class VATCalculatorPageTest {
     }
     @Test
     public void threeDigitsInputTest() {
-
+        page.openPage();
+        page.getDefaultSelectedVATValue();
+        page.selectNet();
+        page.addNetInput("59.434");
+        assertEquals("59.43",page.getNetVATGrossValues().get("Net"));
+        assertEquals("11.89",page.getNetVATGrossValues().get("VAT"));
+        assertEquals("71.32",page.getNetVATGrossValues().get("Gross"));
+        page.selectVAT();
+        page.addVATInput("31.489");
+        assertEquals("157.40",page.getNetVATGrossValues().get("Net"));
+        assertEquals("31.48",page.getNetVATGrossValues().get("VAT"));
+        assertEquals("188.88",page.getNetVATGrossValues().get("Gross"));
+        page.selectGross();
+        page.addGrossInput("100.090");
+        assertEquals("83.41",page.getNetVATGrossValues().get("Net"));
+        assertEquals("16.68",page.getNetVATGrossValues().get("VAT"));
+        assertEquals("100.09",page.getNetVATGrossValues().get("Gross"));
+        page.closePage();
     }
     @Test
-    public void moreDigitsInputTest() {}
+    public void moreDigitsInputTest() {
+        page.openPage();
+        page.getDefaultSelectedVATValue();
+        page.selectNet();
+        page.addNetInput("121.3478");
+        assertEquals("121.34",page.getNetVATGrossValues().get("Net"));
+        assertEquals("24.27",page.getNetVATGrossValues().get("VAT"));
+        assertEquals("145.61",page.getNetVATGrossValues().get("Gross"));
+        page.selectVAT();
+        page.addVATInput("13.0195");
+        assertEquals("65.05",page.getNetVATGrossValues().get("Net"));
+        assertEquals("13.01",page.getNetVATGrossValues().get("VAT"));
+        assertEquals("78.06",page.getNetVATGrossValues().get("Gross"));
+        page.selectGross();
+        page.addGrossInput("1,5482");
+        assertEquals("1.28",page.getNetVATGrossValues().get("Net"));
+        assertEquals("0.26",page.getNetVATGrossValues().get("VAT"));
+        assertEquals("1,54",page.getNetVATGrossValues().get("Gross"));
+        page.closePage();
+    }
     @Test
     public void zeroInputTest() {
         page.openPage();
@@ -295,4 +332,13 @@ class VATCalculatorPageTest {
         page.closePage();
     }
 
+    //additional tests
+    @Test
+    public void actionsInputTest() {
+        page.openPage();
+        page.getDefaultSelectedVATValue();
+        page.addNetInput("100");
+        assertEquals("20",page.getNetVATGrossValues().get("VAT"));
+        page.closePage();
+    }
 }

@@ -1,9 +1,7 @@
 package Page;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -18,6 +16,8 @@ import java.util.Map;
 public class VATCalculatorPage {
     private WebDriver driver;
     private WebDriverWait wait;
+    private Actions actions;
+    private JavascriptExecutor javascriptExecutor;
     //Select element with countries
     @FindBy(name = "Country")
     private WebElement country;
@@ -46,8 +46,10 @@ public class VATCalculatorPage {
 
     public VATCalculatorPage(WebDriver driver) {
         this.driver = driver;
+        this.actions = new Actions(driver);
+        this.javascriptExecutor = (JavascriptExecutor) driver;
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(2));
     }
 
 
@@ -97,7 +99,7 @@ public class VATCalculatorPage {
                     radioButton.getAttribute("checked") != null &&
                             radioButton.getAttribute("checked").equals("true")
             ) {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click()", radioButton);
+                javascriptExecutor.executeScript("arguments[0].click()", radioButton);
                 hasDefault = radioButton;
                 break;
             }
@@ -110,7 +112,7 @@ public class VATCalculatorPage {
         List<WebElement> radioButtons = getVATButtons();
         if (radioButtons.size() > 1) {
             WebElement firstButton = radioButtons.get(0);
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click()", firstButton);
+            javascriptExecutor.executeScript("arguments[0].click()", firstButton);
 
             return firstButton.getAttribute("value");
         } else {
@@ -125,31 +127,37 @@ public class VATCalculatorPage {
     //Net-Gross-VAT radiobutton and input
     //select Net-Gross-VAT buttons
     public void selectNet() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", priceWithoutVAT);
+        javascriptExecutor.executeScript("arguments[0].click()", priceWithoutVAT);
     }
 
     public void selectVAT() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", valueAddedTax);
+        javascriptExecutor.executeScript("arguments[0].click()", valueAddedTax);
     }
 
     public void selectGross() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", priceInclVAT);
+        javascriptExecutor.executeScript("arguments[0].click()", priceInclVAT);
 
     }
 
     //write value to Net-Gross-VAT inputs
     public void addNetInput(String inputValue) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + inputValue + "'", netPrice);
-        wait.until(ExpectedConditions.stalenessOf(netPrice));
+//        javascriptExecutor.executeScript("arguments[0].value='" + inputValue + "'", netPrice);
+        wait.until(ExpectedConditions.visibilityOf(netPrice));
+        actions.moveToElement(netPrice)
+                .click(netPrice)
+                .sendKeys(netPrice, inputValue)
+                .build()
+                .perform();
+        //wait.until(ExpectedConditions.stalenessOf(netPrice));
     }
 
     public void addVATInput(String inputValue) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + inputValue + "'", vatSum);
+        javascriptExecutor.executeScript("arguments[0].value='" + inputValue + "'", vatSum);
         wait.until(ExpectedConditions.stalenessOf(vatSum));
     }
 
     public void addGrossInput(String inputValue) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + inputValue + "'", price);
+        javascriptExecutor.executeScript("arguments[0].value='" + inputValue + "'", price);
         wait.until(ExpectedConditions.stalenessOf(price));
     }
 
